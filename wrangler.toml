@@ -1,0 +1,12 @@
+name = "theju-sales"
+main = "src/worker.js"
+compatibility_date = "2026-09-27"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "theju-sales-db"
+database_id = "55918415-4d3e-44f6-b4b7-579191e03ecc"
