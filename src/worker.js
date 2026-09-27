@@ -1,7 +1,7 @@
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store"}});
 const uid=()=>crypto.randomUUID();
 const enc=new TextEncoder();
-const b64=s=>btoa(String.fromCharCode(...new Uint8Array(s))).replace(/\\+/g,"-").replace(/\\//g,"_").replace(/=+$/,"");
+const b64=s=>btoa(String.fromCharCode(...new Uint8Array(s))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 async function signToken(email,secret){const key=await crypto.subtle.importKey("raw",enc.encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);const sig=await crypto.subtle.sign("HMAC",key,enc.encode(email));return btoa(email)+"."+b64(sig)}
 async function validToken(req,env){const h=req.headers.get("authorization")||"";if(!h.startsWith("Bearer "))return false;const token=h.slice(7);const [a,sig]=token.split(".");if(!a||!sig)return false;const email=atob(a);if(email!==env.ADMIN_EMAIL)return false;const expected=await signToken(email,env.ADMIN_SECRET||"change-me");return token===expected}
 async function api(req,env,url){
